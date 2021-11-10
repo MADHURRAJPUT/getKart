@@ -60,6 +60,19 @@ router.get('/findAll', auth, async(req,res,next)=>{
     }
 })
 
+router.get('/findYourProfile/:id', auth, async(req,res,next)=>{
+    try{
+        if(req.user._id != req.params.id){
+            res.status(400).send({message: 'Not entitled'})
+        }
+        let user = await User.findById(req.params.id).select('-password');
+        res.status(200).send(user);
+    }
+    catch(error){
+        next(error);
+    }
+} )
+
 router.patch('/updateName', auth, async(req,res,next)=>{
     try{
         let id = req.user._id;
